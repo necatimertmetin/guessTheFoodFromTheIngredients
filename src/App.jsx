@@ -21,6 +21,7 @@ function App() {
   const [foodNames, setFoodNames] = useState([]);
   const [sortedOptions, setSortedOptions] = useState([]); // Add sortedOptions state
   const [visibleHints, setVisibleHints] = useState({});
+  const [foodImages, setFoodImages] = useState({}); // State to hold food images
 
   const toggleHint = (index) => {
     setVisibleHints((prev) => ({
@@ -47,9 +48,34 @@ function App() {
       ); // Select a random recipe
     });
   };
+  const fetchImages = () => {
+    const imagesRef = ref(db, "imgs/"); // Reference to the images path in your database
+
+    onValue(imagesRef, (snapshot) => {
+      const data = snapshot.val(); // Get the snapshot value
+      if (data) {
+        // Store food images in the state
+        const foodImagesObject = Object.entries(data).reduce(
+          (acc, [key, value]) => {
+            acc[key] = value; // Map the food name to its URL
+            return acc;
+          },
+          {}
+        );
+        console.log(foodImagesObject[0]);
+        setFoodImages(foodImagesObject[0]); // Set state with the food images
+      } else {
+        console.log("No data available."); // Handle the case where there is no data
+      }
+    });
+  };
+  const getIngredientUrl = (ingredient) => {
+    return foodImages[ingredient] || "URL bulunamadı";
+  };
 
   useEffect(() => {
     fetchAllDatas();
+    fetchImages();
   }, []);
 
   const handleGuess = () => {
@@ -164,14 +190,40 @@ function App() {
                 key={index}
                 sx={{
                   textAlign: "center",
-                  backgroundColor: "#4E4E4E",
-                  color: "#FFFFFF", // Text color for ingredients
+                  background: "linear-gradient(135deg, #4E4E4E, #3A3A3A)", // Gradient background
+                  color: "#FFFFFF",
                   fontWeight: 700,
-                  borderRadius: "8px",
-                  padding: "10px", // Add padding for better spacing
+                  borderRadius: "12px", // Slightly increased border radius
+                  padding: "12px", // Increased padding for better spacing
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center", // Center align items
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Subtle shadow effect
+                  transition: "transform 0.2s, box-shadow 0.2s", // Smooth transition
+                  "&:hover": {
+                    transform: "scale(1.02)", // Scale up on hover
+                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.3)", // Increased shadow on hover
+                  },
                 }}
               >
-                <ListItemText primary={ingredient} />
+                <img
+                  src={getIngredientUrl(ingredient)}
+                  style={{
+                    borderRadius: "8px",
+                    maxWidth: "80%", // Adjust width for better fitting
+                    height: "auto",
+                    marginBottom: "8px", // Space between image and text
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Shadow for the image
+                  }}
+                />
+                <ListItemText
+                  primary={ingredient}
+                  sx={{
+                    fontSize: "1.2rem", // Larger font size for ingredient name
+                    fontWeight: 600, // Semi-bold font weight
+                    textTransform: "capitalize", // Capitalize ingredient names
+                  }}
+                />
               </ListItem>
             ))}
           </List>
