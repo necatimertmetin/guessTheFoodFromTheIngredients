@@ -197,18 +197,15 @@ function App() {
                   {...params}
                   label="Guess The Food Name"
                   variant="outlined"
-                  style={{
-                    marginBottom: "20px",
-                    width: "300px",
-                    backgroundColor: "#4E4E4E",
-                    color: "#FFFFFF",
-                  }}
                   sx={{
                     marginBottom: "20px",
                     width: "300px",
                     backgroundColor: "#4E4E4E",
                     "& .MuiInputLabel-root": {
-                      color: "#FFD700", // Label color
+                      color: "#FFD700", // Default label color (gold)
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "#FFD700", // Label color when focused (gold)
                     },
                     "& .MuiOutlinedInput-root": {
                       "& > fieldset": {
@@ -225,7 +222,6 @@ function App() {
                   }}
                 />
               )}
-              style={{ marginBottom: "20px", width: "300px", color: "#FFFFFF" }}
               getOptionLabel={(option) => option} // Ensure that we get the correct label from the option
               freeSolo // Allow free text input
             />
@@ -239,19 +235,19 @@ function App() {
             sx={{
               marginTop: "10px",
               padding: "10px 20px",
-              backgroundColor: "#4CAF50",
-              color: "#fff",
+              backgroundColor: "#FFD700", // Gold color
+              color: "#333",
               fontSize: "16px",
               fontWeight: "bold",
               borderRadius: "8px",
               transition: "all 0.3s ease",
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
               "&:hover": {
-                backgroundColor: "#45a049",
+                backgroundColor: "#FFC107", // Darker gold on hover
                 boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.3)",
               },
               "&:active": {
-                backgroundColor: "#388e3c",
+                backgroundColor: "#FFA000", // Even darker gold when clicked
                 boxShadow: "none",
               },
             }}
